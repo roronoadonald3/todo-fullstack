@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoApp - Créer un compte</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="incorrect">les mots de passe doivent coorespondre</div>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="http://localhost:3000/index" class="nav-logo">TodoApp</a>
+            <ul class="nav-links">
+                <li><a href="http://localhost:3000/index">Accueil</a></li>
+                <li><a href="http://localhost:3000/todos" >Mes Todos</a></li>
+                <li><a href="http://localhost:3000/login">Connexion</a></li>
+                <li><a href="http://localhost:3000/signup"class="active">Inscription</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="form-container">
+            <div class="form-card fade-in-up">
+                <h1 class="form-title">Créer un compte</h1>
+                
+                <form action="http://localhost:3000/register/user" method="post" >
+                    <div class="form-group">
+                        <label for="fullname" class="form-label">Nom complet</label>
+                        <input type="text" id="fullname" name="name" class="form-input" placeholder="Jean Dupont" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="mail" class="form-input" placeholder="votre@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" id="password" name="password" class="form-input fi" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password" class="form-label">Confirmer le mot de passe</label>
+                        <input type="password" id="confirm-password" name="confirm-password" class="form-input se" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.9rem; cursor: pointer;">
+                            <input type="checkbox" required style="accent-color: var(--accent-primary);">
+                            J'accepte les <a href="#" style="color: var(--accent-primary); text-decoration: none;">conditions d'utilisation</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-full bb" disabled>Créer mon compte</button>
+                </form>
+
+                <div style="text-align: center; margin-top: 2rem; color: var(--text-secondary);">
+                    <p>Déjà un compte ? <a href="http://localhost:3000/login" style="color: var(--accent-primary); text-decoration: none;">Se connecter</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const pass=document.querySelector(".fi")
+        const conf=document.querySelector(".se")
+        const btn=document.querySelector(".bb")
+        const notification=document.querySelector(".incorrect")
+        conf.addEventListener("input",()=>{
+            let val1=pass.value 
+            let val2=conf.value
+            if(val1!==val2){
+                notification.classList.add("vis")
+                setTimeout(()=>{
+                    notification.classList.remove('vis')
+                },3500)
+            }else{
+                    btn.removeAttribute('disabled')
+            }
+            
+
+        })
+    </script>
+</body>
+</html>

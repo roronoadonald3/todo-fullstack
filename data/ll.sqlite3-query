@@ -1,0 +1,2 @@
+-- database: ./base.db
+SELECT password,id from users

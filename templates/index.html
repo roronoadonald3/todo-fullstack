@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoApp - Accueil</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="http://localhost:3000/index" class="nav-logo">TodoApp</a>
+            <ul class="nav-links">
+                <li><a href="http://localhost:3000/index" class="active">Accueil</a></li>
+                <li><a href="http://localhost:3000/todos" >Mes Todos</a></li>
+                <li><a href="http://localhost:3000/login">Connexion</a></li>
+                <li><a href="http://localhost:3000/signup">Inscription</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="hero fade-in-up">
+                <h1>Organisez votre vie</h1>
+                <p>Une application moderne et élégante pour gérer vos tâches quotidiennes avec style et efficacité.</p>
+                <a href="http://localhost:3000/todos" class="btn pulse">Commencer maintenant</a>
+            </section>
+
+            <section class="stats">
+                <div class="card stat-card fade-in-up">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">Tâches terminées</div>
+                </div>
+                <div class="card stat-card fade-in-up">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">En cours</div>
+                </div>
+                <div class="card stat-card fade-in-up">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Prioritaires</div>
+                </div>
+            </section>
+
+            <section class="features">
+                <div class="card fade-in-up">
+                    <h2 style="color: var(--accent-primary); margin-bottom: 1rem; font-size: 1.5rem;">Interface moderne</h2>
+                    <p style="color: var(--text-secondary);">Design sombre et minimaliste avec des animations fluides pour une expérience utilisateur exceptionnelle.</p>
+                </div>
+
+                <div class="card fade-in-up" style="margin-top: 2rem;">
+                    <h2 style="color: var(--accent-primary); margin-bottom: 1rem; font-size: 1.5rem;">Gestion intuitive</h2>
+                    <p style="color: var(--text-secondary);">Ajoutez, modifiez et supprimez vos tâches en toute simplicité avec une interface claire et organisée.</p>
+                </div>
+
+                <div class="card fade-in-up" style="margin-top: 2rem;">
+                    <h2 style="color: var(--accent-primary); margin-bottom: 1rem; font-size: 1.5rem;">Toujours accessible</h2>
+                    <p style="color: var(--text-secondary);">Interface responsive qui s'adapte parfaitement à tous vos appareils, mobile, tablette ou desktop.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoApp - Connexion</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="http://localhost:3000/index" class="nav-logo">TodoApp</a>
+            <ul class="nav-links">
+                <li><a href="http://localhost:3000/index">Accueil</a></li>
+                <li><a href="http://localhost:3000/todos" >Mes Todos</a></li>
+                <li><a href="http://localhost:3000/login"class="active">Connexion</a></li>
+                <li><a href="http://localhost:3000/signup">Inscription</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="form-container">
+            <div class="form-card fade-in-up">
+                <h1 class="form-title">Connexion</h1>
+                
+                <form action="http://localhost:3000/log/user" method="post">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="mail" class="form-input" placeholder="votre@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
+                    </div>
+
+                    <input type="submit" class="btn btn-full">Se connecter</input>
+                </form>
+
+                <div style="text-align: center; margin-top: 2rem; color: var(--text-secondary);">
+                    <p>Pas encore de compte ? <a href="http://localhost:3000/signup" style="color: var(--accent-primary); text-decoration: none;">Créer un compte</a></p>
+                    <p style="margin-top: 1rem;"><a href="#" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Mot de passe oublié ?</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

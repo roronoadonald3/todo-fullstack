@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TodoApp - Mes Todos</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="nav-container">
+        <a href="http://localhost:3000/index" class="nav-logo">TodoApp</a>
+        <ul class="nav-links">
+          <li><a href="http://localhost:3000/index">Accueil</a></li>
+          <li>
+            <a href="http://localhost:3000/todos" class="active">Mes Todos</a>
+          </li>
+          <li><a href="http://localhost:3000/login">Connexion</a></li>
+          <li><a href="http://localhost:3000/signup">Inscription</a></li>
+          <li><button class="btn btn-small logout">DECONNEXION</button></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="todos-header fade-in-up">
+          <h1 class="todos-title" >Mes Tâches</h1>
+          <div  style="color: var(--text-secondary)"><span class="tec">7</span> tâches en cours</div>
+        </div>
+
+        <div class="card fade-in-up" style="margin-bottom: 2rem">
+          <form
+            class="add-todo-form"
+            action="http://localhost:3000/data/add"
+            method="post"
+          >
+            <input
+              type="text"
+              class="form-input"
+              name="name"
+              placeholder="Ajouter une nouvelle tâche..."
+              required
+            />
+            <input type="text" class="form-input" name="description" placeholder="Description de la tache" >
+            <button type="submit" class="btn">Ajouter</button>
+          </form>
+        </div>
+
+        <ul class="todo-list">
+          <li class="todo-item fade-in-up">
+            <img src="trash.svg" alt="">
+            <div class="todo-content">
+              <div class="todo-title">Finaliser le rapport mensuel</div>
+              <div class="todo-description">
+                Compléter l'analyse des ventes et préparer la présentation
+              </div>
+            </div>
+            <div class="todo-actions">
+              <button class="btn btn-small btn-success">✓</button>
+              <button class="btn btn-small btn-danger">✕</button>
+            </div>
+          </li>
+
+          <li class="todo-item fade-in-up">
+            <div class="todo-content">
+              <div class="todo-title">Réunion équipe développement</div>
+              <div class="todo-description">
+                Point hebdomadaire sur l'avancement des projets
+              </div>
+            </div>
+            <div class="todo-actions">
+              <button class="btn btn-small btn-success">✓</button>
+              <button class="btn btn-small btn-danger">✕</button>
+            </div>
+          </li>
+
+          <li class="todo-item fade-in-up">
+            <div class="todo-content">
+              <div class="todo-title">Révision du code frontend</div>
+              <div class="todo-description">
+                Optimiser les performances et corriger les bugs identifiés
+              </div>
+            </div>
+            <div class="todo-actions">
+              <button class="btn btn-small btn-success">✓</button>
+              <button class="btn btn-small btn-danger">✕</button>
+            </div>
+          </li>
+
+          <li class="todo-item fade-in-up">
+            <div class="todo-content">
+              <div class="todo-title">Planifier les vacances d'été</div>
+              <div class="todo-description">
+                Rechercher et réserver l'hébergement pour juillet
+              </div>
+            </div>
+            <div class="todo-actions">
+              <button class="btn btn-small btn-success">✓</button>
+              <button class="btn btn-small btn-danger">✕</button>
+            </div>
+          </li>
+
+          <li class="todo-item fade-in-up">
+            <div class="todo-content">
+              <div class="todo-title">Mise à jour du portfolio</div>
+              <div class="todo-description">
+                Ajouter les derniers projets et mettre à jour les technologies
+              </div>
+            </div>
+            <div class="todo-actions">
+              <button class="btn btn-small btn-success">✓</button>
+              <button class="btn btn-small btn-danger">✕</button>
+            </div>
+          </li>
+
+          <li class="todo-item fade-in-up">
+            <div class="todo-content">
+              <div class="todo-title">Cours de design UX/UI</div>
+              <div class="todo-description">
+                Terminer le module sur l'accessibilité et les bonnes pratiques
+              </div>
+            </div>
+            <div class="todo-actions">
+              <button class="btn btn-small btn-success">✓</button>
+              <button class="btn btn-small btn-danger">✕</button>
+            </div>
+          </li>
+
+          <li class="todo-item fade-in-up">
+            <div class="todo-content">
+              <div class="todo-title">Exercice physique</div>
+              <div class="todo-description">
+                Séance de course à pied de 30 minutes dans le parc
+              </div>
+            </div>
+            <div class="todo-actions">
+              <button class="btn btn-small btn-success">✓</button>
+              <button  class="btn btn-small btn-danger">✕</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+      
+    </main >
+    <script type="module" defer>
+      const list = document.querySelector(".todo-list");
+       const gris = "linear-gradient(135deg, #a7aca7 0%, #1d1f1d 100%)";
+      const rouge = "linear-gradient(135deg, #831f1f 0%, #cc3333 100%)";
+      const vert = "linear-gradient(135deg, #44ff44 0%, #33cc33 100%)";
+      let url = await new URL(window.location.href);
+      let msg = url.searchParams.get("msg");
+      if (msg) {
+        list.innerHTML=""
+        let todos=[]
+        await fetch("http://localhost:3000/data/todos").then((data)=>data.json()).then((el)=>{todos=el})
+        todos=todos.reverse()
+        todos.forEach((el)=>{
+             let redstyle=el.status?`style="background:${gris}"`:""
+            let greenstyle=el.status?`style="background:${vert}"`:""
+            list.innerHTML+=`<li class="todo-item fade-in-up">
+                    
+                    <div class="todo-content">
+                        <div class="todo-title">${el.name}</div>
+                        <div class="todo-description"> Description: ${el.description}</div>
+                    </div>
+                    <div class="todo-actions">
+                        <div><img src="trash.svg" alt=""></div>
+                        <section>
+                        <button ${greenstyle} class="btn btn-small btn-success">✓</button>
+                        <button ${redstyle}  class="btn btn-small btn-danger">✕</button></section>
+                    </div>
+                </li>`
+        })
+        if(list.innerHTML.length<1){
+            list.classList.add("cen")
+            list.innerHTML=`<h2 style="color:white;">Pas encore de taches à faire veuilez en ajouter</h2>`
+        }
+        document.querySelector(".tec").innerHTML=todos.length
+        const logout = document.querySelector(".logout");
+        console.log(logout);
+        logout.style.display = "unset";
+        logout.addEventListener("click", async () => {
+          try {
+            const res = await fetch("http://localhost:3000/logout/user", {
+              method: "POST",
+            });
+
+            if (res.ok) {
+              window.location.href = "/login?msg=loggedout";
+            } else {
+              alert("Erreur lors de la déconnexion.");
+            }
+          } catch (error) {
+            console.error("Erreur réseau :", error);
+            alert("Erreur de connexion au serveur.");
+          }
+        });
+      }
+      const btns = document.querySelectorAll(".btn-success");
+      const btnd = document.querySelectorAll(".btn-danger");
+
+     
+
+      function toggle(rem, add, crem, cadd) {
+        rem.style.background = crem;
+        add.style.background = cadd;
+      }
+
+      btns.forEach((el, index) => {
+        el.addEventListener("click", async  () => {
+          toggle(el, btnd[index], vert, gris);
+          let title = el.parentElement
+               .parentElement           
+               .previousElementSibling 
+               .querySelector('.todo-title')?.textContent;
+          await fetch("http://localhost:3000/data/do",{"method":"put",body:JSON.stringify({"name":title})})
+        });
+      });
+
+      btnd.forEach((el, index) => {
+        el.addEventListener("click", async () => {
+          toggle(el, btns[index], rouge, gris);
+          let title = el.parentElement
+               .parentElement           
+               .previousElementSibling 
+               .querySelector('.todo-title')?.textContent;
+          await fetch("http://localhost:3000/data/undo",{"method":"put",body:JSON.stringify({"name":title})})
+        });
+      });
+      const trash=document.querySelectorAll("img")
+      trash.forEach((el)=>{
+        el.addEventListener("click",async()=>{
+        let title = el.parentElement
+               .parentElement           
+               .previousElementSibling 
+               .querySelector('.todo-title')?.textContent;
+        const res=await fetch("http://localhost:3000/data/rem",{method:"delete",body:JSON.stringify({"name":title})})
+        if (res.ok){
+            location.reload()
+        }
+
+      })
+      })
+    </script>
+  </body>
+</html>
