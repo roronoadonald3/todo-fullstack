@@ -10,12 +10,12 @@
     <div class="incorrect">les mots de passe doivent coorespondre</div>
     <nav class="nav">
         <div class="nav-container">
-            <a href="http://localhost:3000/index" class="nav-logo">TodoApp</a>
+            <a href="/index" class="nav-logo">TodoApp</a>
             <ul class="nav-links">
-                <li><a href="http://localhost:3000/index">Accueil</a></li>
-                <li><a href="http://localhost:3000/todos" >Mes Todos</a></li>
-                <li><a href="http://localhost:3000/login">Connexion</a></li>
-                <li><a href="http://localhost:3000/signup"class="active">Inscription</a></li>
+                <li><a href="/index">Accueil</a></li>
+                <li><a href="/todos" >Mes Todos</a></li>
+                <li><a href="/login">Connexion</a></li>
+                <li><a href="/signup"class="active">Inscription</a></li>
             </ul>
         </div>
     </nav>
@@ -25,7 +25,7 @@
             <div class="form-card fade-in-up">
                 <h1 class="form-title">Créer un compte</h1>
                 
-                <form action="http://localhost:3000/register/user" method="post" >
+                <form action="/register/user" method="post" >
                     <div class="form-group">
                         <label for="fullname" class="form-label">Nom complet</label>
                         <input type="text" id="fullname" name="name" class="form-input" placeholder="Jean Dupont" required>
@@ -57,7 +57,7 @@
                 </form>
 
                 <div style="text-align: center; margin-top: 2rem; color: var(--text-secondary);">
-                    <p>Déjà un compte ? <a href="http://localhost:3000/login" style="color: var(--accent-primary); text-decoration: none;">Se connecter</a></p>
+                    <p>Déjà un compte ? <a href="/login" style="color: var(--accent-primary); text-decoration: none;">Se connecter</a></p>
                 </div>
             </div>
         </div>

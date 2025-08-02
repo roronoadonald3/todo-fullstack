@@ -15,7 +15,7 @@ export async function showpages(req,res) {
             return res.type("text/html").sendFile(`${page}.html`)
         }
         if(req.session.user){
-            return res.redirect("http://localhost:3000/todos?msg=connected")
+            return res.redirect("/todos?msg=connected")
         }
     }
     try{

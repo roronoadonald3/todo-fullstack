@@ -9,14 +9,14 @@
   <body>
     <nav class="nav">
       <div class="nav-container">
-        <a href="http://localhost:3000/index" class="nav-logo">TodoApp</a>
+        <a href="/index" class="nav-logo">TodoApp</a>
         <ul class="nav-links">
-          <li><a href="http://localhost:3000/index">Accueil</a></li>
+          <li><a href="/index">Accueil</a></li>
           <li>
-            <a href="http://localhost:3000/todos" class="active">Mes Todos</a>
+            <a href="/todos" class="active">Mes Todos</a>
           </li>
-          <li><a href="http://localhost:3000/login">Connexion</a></li>
-          <li><a href="http://localhost:3000/signup">Inscription</a></li>
+          <li><a href="/login">Connexion</a></li>
+          <li><a href="/signup">Inscription</a></li>
           <li><button class="btn btn-small logout">DECONNEXION</button></li>
         </ul>
       </div>
@@ -32,7 +32,7 @@
         <div class="card fade-in-up" style="margin-bottom: 2rem">
           <form
             class="add-todo-form"
-            action="http://localhost:3000/data/add"
+            action="/data/add"
             method="post"
           >
             <input
@@ -153,7 +153,7 @@
       if (msg) {
         list.innerHTML=""
         let todos=[]
-        await fetch("http://localhost:3000/data/todos").then((data)=>data.json()).then((el)=>{todos=el})
+        await fetch(window.location.origin + "/data/todos").then((data)=>data.json()).then((el)=>{todos=el})
         todos=todos.reverse()
         todos.forEach((el)=>{
              let redstyle=el.status?`style="background:${gris}"`:""
@@ -182,7 +182,7 @@
         logout.style.display = "unset";
         logout.addEventListener("click", async () => {
           try {
-            const res = await fetch("http://localhost:3000/logout/user", {
+            const res = await fetch(window.location.origin + "/logout/user", {
               method: "POST",
             });
 
@@ -214,7 +214,7 @@
                .parentElement           
                .previousElementSibling 
                .querySelector('.todo-title')?.textContent;
-          await fetch("http://localhost:3000/data/do",{"method":"put",body:JSON.stringify({"name":title})})
+          await fetch(window.location.origin + "/data/do",{"method":"put",body:JSON.stringify({"name":title})})
         });
       });
 
@@ -225,7 +225,7 @@
                .parentElement           
                .previousElementSibling 
                .querySelector('.todo-title')?.textContent;
-          await fetch("http://localhost:3000/data/undo",{"method":"put",body:JSON.stringify({"name":title})})
+          await fetch(window.location.origin + "/data/undo",{"method":"put",body:JSON.stringify({"name":title})})
         });
       });
       const trash=document.querySelectorAll("img")
@@ -235,7 +235,7 @@
                .parentElement           
                .previousElementSibling 
                .querySelector('.todo-title')?.textContent;
-        const res=await fetch("http://localhost:3000/data/rem",{method:"delete",body:JSON.stringify({"name":title})})
+        const res=await fetch(window.location.origin + "/data/rem",{method:"delete",body:JSON.stringify({"name":title})})
         if (res.ok){
             location.reload()
         }
