@@ -48,7 +48,9 @@ app.put("/data/do",(req,res)=>{dotask(req,res)})
 app.put("/data/undo",(req,res)=>{undotask(req,res)})
 app.delete("/data/rem",(req,res)=>{deltask(req,res)})
 const start= async ()=>{
-        await app.listen({port:3000})
+        const PORT = process.env.PORT || 3000;
+        await app.listen({ port: PORT, host: '0.0.0.0' });
+
         console.log("serveur à l'ecoute sur le port 3000")
 }
 start()
