@@ -1,2 +1,2 @@
 -- database: ./base.db
-SELECT password,id from users
+DELETE FROM codes WHERE mail = "roronoadonald3@gmail.com"
