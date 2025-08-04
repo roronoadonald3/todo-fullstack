@@ -7,10 +7,18 @@ export async function deltask(req,res) {
         let name=req.body
         name=JSON.parse(name)
         name=name.name
-        let status = await db.prepare("select status from todos where user_id=? and name = ?").get(id,name).status
+        const row = await db('todos')
+  .where({ user_id: id, name: name })
+  .first();
+
+const status = row ? row.status : null;
+
         console.log(status,id,name)
         if(status!==undefined){
-           db.prepare("delete from todos where user_id=? and name=?").run(id,name)
+           await db('todos')
+  .where({ user_id: id, name: name })
+  .del();
+
             console.log("done")
         }
         return res.send()

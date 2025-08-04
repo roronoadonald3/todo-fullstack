@@ -1,7 +1,7 @@
 import db from "../data/prepare.js"
 
 export  async function getuser(req,res,use) {
-    let user= await db.prepare("SELECT * FROM users WHERE name = ?").get(use)
+    const user = await db('users').where({ name: use }).first();
     if (user===undefined){
         return res.type("text/html").send("non user")
     }else{
@@ -11,7 +11,7 @@ export  async function getuser(req,res,use) {
 
 export async function gettodos(req,res) {
     if(req.session.user){
-   let todos=await db.prepare("select * from todos where user_id =?").all(req.session.user.id)
+   const todos = await db('todos').where({ user_id: req.session.user.id }).select();
    console.log(todos)
    if(todos===undefined){
     return res.code(404).send("pas de todos")
