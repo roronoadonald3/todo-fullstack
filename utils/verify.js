@@ -9,10 +9,12 @@ export function isconnected(req) {
     return false
 }
 
-export function authlogin(req,res) {
+export async function authlogin(req,res) {
     let mail=req.body.mail
     let vpassword=req.body.password
-    let {password,id}=db.prepare("select password,id from users where email=? ").get(mail)
+    const user = await db('users').select('password', 'id').where({ email: mail }).first();
+    const { password, id } = user;
+
     console.log(password,id)
     if(!password){
         res.redirect("/login")

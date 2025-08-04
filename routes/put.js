@@ -7,10 +7,18 @@ export async function dotask(req,res){
         let name=req.body
         name=JSON.parse(name)
         name=name.name
-        let status = await db.prepare("select status from todos where user_id=? and name = ?").get(id,name).status
+        const row = await db('todos')
+  .where({ user_id: id, name: name })
+  .first();
+
+const status = row ? row.status : null; // null si pas trouvé
+
         console.log(status,id,name)
-        if(status===0){
-           db.prepare("update todos set status = ? where user_id=? and name=?").run(1,id,name)
+        if(status===false){
+           await db('todos')
+  .where({ user_id: id, name: name })
+  .update({ status: true });
+
             console.log("done")
         }
     }
@@ -23,10 +31,18 @@ export async function undotask(req,res){
         let name=req.body
         name=JSON.parse(name)
         name=name.name
-        let status = await db.prepare("select status from todos where user_id=? and name = ?").get(id,name).status
+       const row = await db('todos')
+  .where({ user_id: id, name: name })
+  .first();
+
+const status = row ? row.status : null; // null si pas trouvé
+
         console.log(status,id,name)
-        if(status===1){
-           db.prepare("update todos set status = ? where user_id=? and name=?").run(0,id,name)
+        if(status===true){
+          await db('todos')
+  .where({ user_id: id, name: name })
+  .update({ status: false });
+
             console.log("done")
         }
     }

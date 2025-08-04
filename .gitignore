@@ -4,3 +4,5 @@ i.js
 node_modules/
 fastify.zip
 .env
+data/base.db
+test-db.js

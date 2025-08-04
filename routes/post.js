@@ -1,5 +1,5 @@
 import { hash } from "@node-rs/argon2";
-import db from "../data/prepare.js";
+import db  from "../data/prepare.js";
 
 
 /**
@@ -8,13 +8,20 @@ import db from "../data/prepare.js";
  * @param {*} req 
  * @param {*} res 
  */
-export function storedata(con, req, res) {
+export async function storedata(con, req, res) {
   if (con) {
     let name = req.body.name
     let description=req.body.description
     let dat = new Date().toLocaleString('fr-FR')
-    db.prepare("INSERT INTO todos (name, status, date,user_id,description) VALUES (?, ?, ?,?,?)").run(name, 0, dat,req.session.user.id,description)
-    console.log(db.prepare("select * from todos").all())
+    await db('todos').insert({
+  name: name,
+  status: false,      // ou 0 si tu préfères
+  date: dat,
+  user_id: req.session.user.id,
+  description: description
+});
+const todos = await db('todos').select('*');
+console.log(todos);
     return res.redirect("/todos")
   } else {
     return res.code(302).redirect("/login")
@@ -26,7 +33,13 @@ export async function registeruser(req,res){
     let {name,mail, password,conf}=req.body
   password= await hash(password)
   console.log(password)
-  db.prepare("INSERT INTO users(id,name,email,password) values (?,?,?,?)").run(Date.now(),name,mail,password)
+ await db('users').insert({
+  id: Date.now(),  // si tu veux gérer l'id toi-même (en général on laisse la DB auto-incrémenter)
+  name: name,
+  email: mail,
+  password: password
+});
+
   return res.redirect("/mail")
   } catch (error) {
     console.log(error)
@@ -47,7 +60,8 @@ export async function logout(req,res) {
 
 export async function Sendmail(req,res,app) {
   const {email}=req.body
-  let exist=db.prepare("select * from users where email=?").get(email)
+  const exist = await db('users').where({ email }).first();
+
   if(exist){
    return  res.send({"exist":true})
   }
@@ -67,7 +81,11 @@ Cordialement,
 RD'S TODOLIST
 
 `
-db.prepare("insert into codes values (?,?)").run(email,randnum)
+await db('codes').insert({
+  mail: email,
+  code: randnum
+});
+
 let to=email
 console.log(email,to,req.body)
 const info=await app.mailer.sendMail({to,subject,html:`<p>${message}</p>`})
@@ -91,7 +109,9 @@ export async function verifycode(req,res) {
   let { code, mail } = fields;
 
   let vcode=code
-  code=await db.prepare('select code from codes where mail=?').get(mail).code
+ const row = await db('codes').where({ mail }).first();
+  code = row ? row.code : null;  // null si pas trouvé
+
   if(Number(vcode)===Number(code)){
     return res.send("oklm")
   }

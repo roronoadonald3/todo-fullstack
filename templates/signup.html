@@ -89,7 +89,8 @@
         
 document.querySelector("form").addEventListener("submit", async function (e) {
   e.preventDefault();
-
+    btn.innerHTML="veuillez patienter..."
+    btn.setAttribute("disabled","true")
   const form = e.target;
   const name = form.name.value;
   const email = form.mail.value;
@@ -114,6 +115,8 @@ document.querySelector("form").addEventListener("submit", async function (e) {
     
     if (data.exists) {
       alert("Cet email est déjà utilisé.");
+      btn.innerHTML="reesayer"
+    btn.removeAttribute("disabled")
       return 
     } 
     form.submit(); 
@@ -121,6 +124,8 @@ document.querySelector("form").addEventListener("submit", async function (e) {
 
   } catch (err) {
     console.error("Erreur de requête :", err);
+    btn.innerHTML="reesayer"
+    btn.removeAttribute("disabled")
     alert("Une erreur est survenue. Réessayez plus tard.");
   }
 });
