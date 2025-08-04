@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      #div {
+        position: relative;
+        top: 20vh;
+      }
+      h3 {
+        text-align: center;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      h4 {
+        margin: 2.5vw;
+        width: 95vw;
+        text-align: center;
+      }
+      #code {
+        width: 50vw;
+        margin-left: 15vw;
+        text-align: center;
+        font-weight: bolder;
+      }
+      .bottom {
+        text-align: center;
+        font-weight: bolder;
+        margin: 2vh;
+      }
+      a {
+        transition: all 1s ease;
+      }
+      a:hover {
+        cursor: pointer;
+        color: #00d4ff;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="nav-container">
+        <a href="/index" class="nav-logo">RD'S TodoApp</a>
+        <ul class="nav-links">
+          <li><a href="/index" class="active">Accueil</a></li>
+          <li><a href="/todos">Mes Todos</a></li>
+          <li><a href="/login">Connexion</a></li>
+          <li><a href="/signup">Inscription</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="card" id="div">
+      <form action="/verify/code" method="post">
+        <h3 class="nav-links">veuillez verifier votre adresse mail.</h3>
+        <h4>
+          nous avons envoyé un code à l'adresse
+          <span class="mail">ro***********om</span> veuillez le saisir pour
+          confirmer votre adresse mail et valider votre creation de compte
+        </h4>
+        <input
+          type="text"
+          class="form-input"
+          placeholder="XXXXXXX"
+          name="code"
+          id="code"
+        />
+        <button class="btn">confirmer</button>
+        <p class="bottom">
+          vous n'avez pas recu l'email? <a class="reessayez">reessayez dans </a>
+        </p>
+      </form>
+    </div>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.querySelector("#code");
+  const mailSpan = document.querySelector(".mail");
+  const retry = document.querySelector(".reessayez");
+  const form = document.querySelector("form");
+
+  const truemail = localStorage.getItem("truemail");
+  console.log("truemail:", truemail);
+
+  if (truemail) {
+    mailSpan.innerHTML = truemail;
+  } else {
+    window.location.href = "/signup";
+    return;
+  }
+
+  let c = 120;
+  let interval;
+
+  function startCountdown() {
+    retry.innerHTML = `reessayez dans ${c}s`;
+    interval = setInterval(() => {
+      if (c > 0) {
+        retry.innerHTML = `reessayez dans ${--c}s`;
+      } else {
+        clearInterval(interval);
+        retry.innerHTML = `Renvoyer un code`;
+        retry.style.color = "var(--accent-primary)";
+        retry.style.cursor = "pointer";
+
+        retry.onclick = async () => {
+          // envoyer le mail
+          const response = await fetch("/send/mail", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ mail: truemail })
+          });
+
+          if (response.ok) {
+            alert("Code renvoyé avec succès !");
+            c = 120;
+            startCountdown(); // redémarre le compteur
+          } else {
+            alert("Erreur lors de l'envoi du code.");
+          }
+        };
+      }
+    }, 1000);
+  }
+
+  startCountdown();
+
+  // Interception de la soumission du formulaire
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    formData.append("mail", truemail);
+
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: formData
+      });
+
+      if (response.status === 200) {
+        window.location.href = "/login";
+      } else {
+        alert("Code incorrect.");
+      }
+    } catch (err) {
+      console.error("Erreur réseau :", err);
+      alert("Une erreur est survenue.");
+    }
+  });
+});
+</script>
+
+  </body>
+</html>
