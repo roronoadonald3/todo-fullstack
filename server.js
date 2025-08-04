@@ -60,7 +60,7 @@ app.post("/send/mail",(req,res)=>{Sendmail(req,res,app)})
 app.post("/verify/code",(req,res)=>{verifycode(req,res)})
 const start= async ()=>{
         const PORT = process.env.PORT || 3000;
-        await app.listen({ port: PORT });
+        await app.listen({ port: PORT , host:"0.0.0.0"});
 
         console.log("serveur à l'ecoute sur le port 3000")
 }
