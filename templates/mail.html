@@ -1,44 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Vérification Email - RD'S TodoApp</title>
     <link rel="stylesheet" href="style.css" />
     <style>
-      #div {
-        position: relative;
-        top: 20vh;
+      :root {
+        --accent-primary: #00d4ff;
+        --bg: #55464638;
+        --card-bg: rgb(39, 38, 38);
+        --text: #ffffff;
       }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+      }
+
+      .card {
+        background: var(--card-bg);
+        padding: 30px 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: 10vh auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
       h3 {
         text-align: center;
-        width: 100vw;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        font-size: 1.5rem;
       }
+
       h4 {
-        margin: 2.5vw;
-        width: 95vw;
         text-align: center;
+        font-size: 1rem;
+        line-height: 1.6;
+        padding: 0 10px;
       }
+
       #code {
-        width: 50vw;
-        margin-left: 15vw;
+        width: 100%;
+        font-size: 1.2rem;
+        padding: 12px;
+        border: 2px solid var(--accent-primary);
+        border-radius: 8px;
         text-align: center;
-        font-weight: bolder;
+        font-weight: bold;
       }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--accent-primary);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .btn:hover {
+        background-color: #0098b3;
+      }
+
       .bottom {
         text-align: center;
-        font-weight: bolder;
-        margin: 2vh;
+        font-weight: bold;
+        margin-top: 10px;
       }
+
       a {
-        transition: all 1s ease;
+        transition: all 0.3s ease;
       }
+
       a:hover {
         cursor: pointer;
-        color: #00d4ff;
+        color: var(--accent-primary);
+      }
+
+      @media screen and (max-width: 600px) {
+        .card {
+          margin: 5vh auto;
+          padding: 20px 15px;
+        }
+
+        h3 {
+          font-size: 1.2rem;
+        }
+
+        h4 {
+          font-size: 0.95rem;
+        }
+
+        #code {
+          font-size: 1rem;
+        }
+
+        .btn {
+          font-size: 0.95rem;
+        }
       }
     </style>
   </head>
@@ -54,107 +122,108 @@
         </ul>
       </div>
     </nav>
+
     <div class="card" id="div">
       <form action="/verify/code" method="post">
-        <h3 class="nav-links">veuillez verifier votre adresse mail.</h3>
+        <h3>Vérifiez votre adresse e-mail</h3>
         <h4>
-          nous avons envoyé un code à l'adresse
-          <span class="mail">ro***********om</span> veuillez le saisir pour
-          confirmer votre adresse mail et valider votre creation de compte
+          Un code a été envoyé à <span class="mail">ro***********om</span>.
+          <br />Veuillez le saisir pour confirmer votre adresse et valider votre compte.
         </h4>
+
         <input
           type="text"
           class="form-input"
           placeholder="XXXXXXX"
           name="code"
           id="code"
+          required
         />
-        <button class="btn">confirmer</button>
+
+        <button class="btn" type="submit">Confirmer</button>
+
         <p class="bottom">
-          vous n'avez pas recu l'email? <a class="reessayez">reessayez dans </a>
+          Vous n'avez pas reçu l'e-mail ?
+          <a class="reessayez">Réessayez dans</a>
         </p>
       </form>
     </div>
+
     <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const input = document.querySelector("#code");
-  const mailSpan = document.querySelector(".mail");
-  const retry = document.querySelector(".reessayez");
-  const form = document.querySelector("form");
+      document.addEventListener("DOMContentLoaded", () => {
+        const input = document.querySelector("#code");
+        const mailSpan = document.querySelector(".mail");
+        const retry = document.querySelector(".reessayez");
+        const form = document.querySelector("form");
 
-  const truemail = localStorage.getItem("truemail");
-  console.log("truemail:", truemail);
+        const truemail = localStorage.getItem("truemail");
+        if (truemail) {
+          mailSpan.textContent = truemail;
+        } else {
+          window.location.href = "/signup";
+          return;
+        }
 
-  if (truemail) {
-    mailSpan.innerHTML = truemail;
-  } else {
-    window.location.href = "/signup";
-    return;
-  }
+        let c = 120;
+        let interval;
 
-  let c = 120;
-  let interval;
+        function startCountdown() {
+          retry.innerHTML = `Réessayez dans ${c}s`;
+          interval = setInterval(() => {
+            if (c > 0) {
+              retry.innerHTML = `Réessayez dans ${--c}s`;
+            } else {
+              clearInterval(interval);
+              retry.innerHTML = `Renvoyer un code`;
+              retry.style.color = "var(--accent-primary)";
+              retry.style.cursor = "pointer";
 
-  function startCountdown() {
-    retry.innerHTML = `reessayez dans ${c}s`;
-    interval = setInterval(() => {
-      if (c > 0) {
-        retry.innerHTML = `reessayez dans ${--c}s`;
-      } else {
-        clearInterval(interval);
-        retry.innerHTML = `Renvoyer un code`;
-        retry.style.color = "var(--accent-primary)";
-        retry.style.cursor = "pointer";
+              retry.onclick = async () => {
+                const response = await fetch("/send/mail", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({ mail: truemail })
+                });
 
-        retry.onclick = async () => {
-          // envoyer le mail
-          const response = await fetch("/send/mail", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ mail: truemail })
-          });
+                if (response.ok) {
+                  alert("Code renvoyé avec succès !");
+                  c = 120;
+                  startCountdown();
+                } else {
+                  alert("Erreur lors de l'envoi du code.");
+                }
+              };
+            }
+          }, 1000);
+        }
 
-          if (response.ok) {
-            alert("Code renvoyé avec succès !");
-            c = 120;
-            startCountdown(); // redémarre le compteur
-          } else {
-            alert("Erreur lors de l'envoi du code.");
+        startCountdown();
+
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const formData = new FormData(form);
+          formData.append("mail", truemail);
+
+          try {
+            const response = await fetch(form.action, {
+              method: "POST",
+              body: formData
+            });
+
+            if (response.status === 200) {
+              window.location.href = "/login";
+            } else {
+              alert("Code incorrect.");
+            }
+          } catch (err) {
+            console.error("Erreur réseau :", err);
+            alert("Une erreur est survenue.");
           }
-        };
-      }
-    }, 1000);
-  }
-
-  startCountdown();
-
-  // Interception de la soumission du formulaire
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const formData = new FormData(form);
-    formData.append("mail", truemail);
-
-    try {
-      const response = await fetch(form.action, {
-        method: "POST",
-        body: formData
+        });
       });
-
-      if (response.status === 200) {
-        window.location.href = "/login";
-      } else {
-        alert("Code incorrect.");
-      }
-    } catch (err) {
-      console.error("Erreur réseau :", err);
-      alert("Une erreur est survenue.");
-    }
-  });
-});
-</script>
-
+    </script>
   </body>
 </html>

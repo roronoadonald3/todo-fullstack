@@ -60,27 +60,39 @@ export async function logout(req,res) {
 
 export async function Sendmail(req,res,app) {
   const {email}=req.body
-  const exist = await db('users').where({ email }).first();
+  const exist = await db('users').where({ email}).first();
 
+  let randnum = Math.floor(Math.random()*1000000)
+  
   if(exist){
+     const row = await db('codes').where({ email }).first();
+  const codes = row ? row.code : null;
+  randnum=codes
    return  res.send({"exist":true})
   }
-  let randnum = Math.floor(Math.random()*1000000)
   let subject="Code de verification "
-  let message=`Bonjour cher utilisateur(trice),
+  const message = `
+  <div style="font-family:Arial, sans-serif; line-height:1.6; color:#333; max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:8px;">
+    <h2 style="color:#2c3e50;">Bonjour,</h2>
+    
+    <p>Merci d'utiliser <strong>RD'S TODOLIST</strong>.</p>
 
-Voici votre code de confirmation :
-</p>
-<h1>Code : ${randnum}<h1>
-<p>
-Merci de ne pas partager ce code avec qui que ce soit.
+    <p>Voici votre <strong>code de confirmation</strong> :</p>
 
-Si vous n'avez pas demandé ce code, veuillez ignorer cet e-mail.
-<br>
-Cordialement,
-RD'S TODOLIST
+    <div style="background-color:#f0f0f0; padding:15px; text-align:center; font-size:24px; font-weight:bold; border-radius:4px; margin:20px 0;">
+      ${randnum}
+    </div>
 
-`
+    <p style="color:#e74c3c;"><strong>Ne partagez ce code avec personne.</strong></p>
+
+    <p>Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email en toute sécurité.</p>
+
+    <br>
+    <p>Cordialement,</p>
+    <p><strong>L’équipe RD'S TODOLIST</strong></p>
+  </div>
+`;
+
 await db('codes').insert({
   mail: email,
   code: randnum
@@ -88,7 +100,7 @@ await db('codes').insert({
 
 let to=email
 console.log(email,to,req.body)
-const info=await app.mailer.sendMail({to,subject,html:`<p>${message}</p>`})
+const info=await app.mailer.sendMail({to,subject,html:message})
 console.log("mesasage envoyé: ", info.messageId)
  return res.send({ success: true, redirect: "/mail" })
 

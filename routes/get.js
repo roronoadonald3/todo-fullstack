@@ -21,3 +21,5 @@ export async function gettodos(req,res) {
     return res.send("pas de todos pour vous mon tres cher")
    }
 }
+
+Date().toLocaleLowerCase("fr-FR")

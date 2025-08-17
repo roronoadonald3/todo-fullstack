@@ -65,7 +65,7 @@
     <script>
         const pass=document.querySelector(".fi")
         const conf=document.querySelector(".se")
-        const btn=document.querySelector(".bb")
+        const btn=document.querySelector("button")
         const notification=document.querySelector(".incorrect")
         conf.addEventListener("input",()=>{
             let val1=pass.value 
@@ -77,6 +77,7 @@
                 },3500)
             }else{
                     btn.removeAttribute('disabled')
+                    btn.classList.remove("bb")
             }
         
 

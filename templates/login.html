@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="notif"><h2>fuck u bitch</h2></div>
     <nav class="nav">
         <div class="nav-container">
             <a href="/index" class="nav-logo">RD'S TodoApp</a>
@@ -27,12 +28,12 @@
                 <form action="/log/user" method="post">
                     <div class="form-group">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" name="mail" class="form-input" placeholder="votre@email.com" required>
+                        <input type="email" id="email" name="mail" class="form-input mail" placeholder="votre@email.com" required>
                     </div>
 
                     <div class="form-group">
                         <label for="password" class="form-label">Mot de passe</label>
-                        <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
+                        <input type="password" id="password" name="password" class="form-input pass" placeholder="••••••••" required>
                     </div>
 
                     <input type="submit" class="btn btn-full">Se connecter</input>
@@ -40,10 +41,91 @@
 
                 <div style="text-align: center; margin-top: 2rem; color: var(--text-secondary);">
                     <p>Pas encore de compte ? <a href="/signup" style="color: var(--accent-primary); text-decoration: none;">Créer un compte</a></p>
-                    <p style="margin-top: 1rem;"><a href="#" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Mot de passe oublié ?</a></p>
+                    <p style="margin-top: 1rem;"><a href="#" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;" class="mdpo">Mot de passe oublié ?</a></p>
                 </div>
             </div>
         </div>
     </main>
+    <script>
+        document.querySelector(".mail").addEventListener("input",()=>{
+            localStorage.setItem("truemail",document.querySelector(".mail").value)
+        })
+        const form=document.querySelector("form")
+        form.addEventListener("submit",async (e)=>{
+            e.preventDefault()
+            let mail=document.querySelector(".mail").value
+            let pass=document.querySelector(".pass").value
+            let reponse = await fetch("/log/user",{method:"post",body:JSON.stringify({"mail":mail,"password":pass})})
+            if(reponse.status===404){
+                document.querySelector(".notif>h2").innerHTML="Email ou mot de passe incorrect!!"
+                document.querySelector(".notif").classList.add("ok")
+                setTimeout(()=>{
+                    document.querySelector(".notif").classList.remove("ok")
+                },2000)
+            } 
+
+            console.log(reponse.url, reponse.status)
+            if(reponse.status===200){
+                location.href=reponse.url
+            }
+                })
+
+            let mdpo=document.querySelector(".mdpo")
+            mdpo.addEventListener("click",async (e)=>{
+                let mail=document.querySelector(".mail").value
+                e.preventDefault()
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if(mail===""){
+                document.querySelector(".notif>h2").innerHTML="veuillez remplir le champ de l'email!!!"
+                document.querySelector(".notif").classList.add("ok")
+                setTimeout(()=>{
+                    document.querySelector(".notif").classList.remove("ok")
+                },2000)
+                return
+                }
+                if(!emailRegex.test(mail)){
+                    document.querySelector(".notif>h2").innerHTML="veuillez rentrer un email valide!!!"
+                document.querySelector(".notif").classList.add("ok")
+                setTimeout(()=>{
+                    document.querySelector(".notif").classList.remove("ok")
+                },2000)
+                return
+                }else{
+                     document.querySelector(".notif>h2").innerHTML="veuillez patienter"
+                document.querySelector(".notif").classList.add("ok")
+                setTimeout(()=>{
+                    document.querySelector(".notif").classList.remove("ok")
+                },2000)
+                    let res = await fetch("/reset/user", {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ email: mail })
+                    });
+
+                    console.log(res.status,res.redirected)
+                    if(res.redirected){
+                        location.href="/reset"
+                        return
+                    }
+                    if(res.status>400){
+                document.querySelector(".notif>h2").innerHTML="Adresse mail incorrect"
+                document.querySelector(".notif").classList.add("ok")
+                setTimeout(()=>{
+                    document.querySelector(".notif").classList.remove("ok")
+                },2000)
+                return
+                    }
+                    
+                }
+                
+
+                
+                
+            })
+          
+
+    </script>
 </body>
 </html>

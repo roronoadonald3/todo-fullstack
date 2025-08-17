@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vérification du code</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      :root {
+        --accent-primary: #00d4ff;
+        --font-color: #ffffff;
+        --bg-color: #121212;
+        --card-color: #1e1e1e;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-color);
+        color: var(--font-color);
+        font-family: Arial, sans-serif;
+      }
+
+      nav.nav {
+        background-color: #1e1e1e;
+        padding: 1rem;
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .nav-logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--accent-primary);
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1rem;
+        list-style: none;
+      }
+
+      .nav-links li a {
+        color: var(--font-color);
+        text-decoration: none;
+      }
+
+      .nav-links li a:hover,
+      .nav-links .active {
+        color: var(--accent-primary);
+      }
+
+      .card {
+        background-color: var(--card-color);
+        border-radius: 8px;
+        padding: 2rem;
+        max-width: 500px;
+        margin: 10vh auto;
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+      }
+
+      h3,
+      h4 {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .mail {
+        color: var(--accent-primary);
+        font-weight: bold;
+      }
+
+      #code {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        text-align: center;
+        margin: 1rem 0;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 0.8rem;
+        background-color: var(--accent-primary);
+        border: none;
+        border-radius: 5px;
+        color: #000;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .btn:hover {
+        background-color: #00b5e0;
+      }
+
+      .bottom {
+        text-align: center;
+        margin-top: 1rem;
+      }
+
+      a.reessayez {
+        color: var(--font-color);
+        text-decoration: underline;
+        transition: color 0.3s;
+      }
+
+      a.reessayez:hover {
+        color: var(--accent-primary);
+        cursor: pointer;
+      }
+
+      @media (max-width: 600px) {
+        .card {
+          width: 90%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="nav-container">
+        <a href="/index" class="nav-logo">RD'S TodoApp</a>
+        <ul class="nav-links">
+          <li><a href="/index" class="active">Accueil</a></li>
+          <li><a href="/todos">Mes Todos</a></li>
+          <li><a href="/login">Connexion</a></li>
+          <li><a href="/signup">Inscription</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="card">
+      <h3>Veuillez vérifier votre adresse mail.</h3>
+      <h4>
+        Nous avons envoyé un code à l'adresse
+        <span class="mail">ro***********om</span><br />
+        Veuillez le saisir pour réinitialiser votre mot de passe.
+      </h4>
+
+      <input
+        type="text"
+        class="form-input"
+        placeholder="XXXXXXX"
+        name="code"
+        id="code"
+      />
+      <button class="btn" id="submit-code">Confirmer</button>
+
+      <p class="bottom">
+        Vous n'avez pas reçu l'e-mail ?
+        <a class="reessayez">Réessayez dans 120s</a>
+      </p>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const input = document.querySelector("#code");
+        const mailSpan = document.querySelector(".mail");
+        const retry = document.querySelector(".reessayez");
+        const submitBtn = document.querySelector("#submit-code");
+
+        const truemail = localStorage.getItem("truemail");
+        if (!truemail) {
+          window.location.href = "/signup";
+          return;
+        }
+
+        mailSpan.textContent = truemail;
+
+        // Countdown pour le renvoi du code
+        let c = 120;
+        let interval;
+
+        function startCountdown() {
+          retry.textContent = `Réessayez dans ${c}s`;
+          retry.style.pointerEvents = "none";
+          retry.style.color = "#aaa";
+
+          interval = setInterval(() => {
+            if (c > 0) {
+              retry.textContent = `Réessayez dans ${--c}s`;
+            } else {
+              clearInterval(interval);
+              retry.textContent = "Renvoyer un code";
+              retry.style.color = "var(--accent-primary)";
+              retry.style.pointerEvents = "auto";
+              retry.addEventListener("click", resendCode);
+            }
+          }, 1000);
+        }
+
+        async function resendCode() {
+          const response = await fetch("/reset/user", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ mail: truemail }),
+          });
+
+          if (response.ok) {
+            alert("Code renvoyé !");
+            c = 120;
+            startCountdown();
+          } else {
+            alert("Erreur lors de l'envoi du code.");
+          }
+        }
+
+        startCountdown();
+
+        submitBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          const code = input.value.trim();
+
+          if (!code) return alert("Veuillez entrer le code.");
+
+          const response = await fetch("/verify/reset", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              mail: truemail,
+              code,
+            }),
+          });
+
+          if (response.ok) {
+            alert("Code correct !");
+            console.log(document.querySelector(".card"))
+            let div=document.querySelector(".card")
+            div.innerHTML=`
+            <h3>NOUVEAU MOT DE PASSE </h3>
+      <h4>
+        Veillez s'il vous plait à ce que cet mot de passe soit sécurisé(minimum 8 caracteres).
+      </h4>
+
+      <input
+        type="password"
+        class="form-input pass"
+        placeholder="entrez votre mot de passe"
+      />
+       <input
+        type="password"
+        class="form-input conf"
+        placeholder="entrez votre mot de passe"
+      />
+      <button class="btn send" >confirmer</button>
+`
+      console.log(div)
+      const pass=document.querySelector(".pass")
+      const conf=document.querySelector(".conf")
+      document.querySelector(".send").addEventListener("click",async ()=>{
+        let val1=pass.value
+        let val2=conf.value
+        if(val1.lenght<8){
+          alert('8 characteres minimum ')
+          return
+        }
+        if(val1===val2&& val1.trim()!==""){
+          let resp= await fetch("/reset/pass", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ pass: val1,email:truemail }),
+          })
+          if(resp.ok){
+            alert("mot de passe modifié avec succes")
+            window.location.href="/login"
+          }else{
+            alert("une erreur s'est produite, prière de reesayer")
+          }
+        }else{
+          alert("les deux mot de passe doivent correspondre!!!")
+        }
+
+      })
+          } else {
+            alert("Code incorrect.");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

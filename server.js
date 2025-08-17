@@ -9,7 +9,7 @@ import secureSession from '@fastify/secure-session'
 import {readFile} from "node:fs/promises"
 import { storedata,registeruser,logout,Sendmail, verifycode } from "./routes/post.js";
 import fastifyFormbody from "@fastify/formbody"
-import { dotask,undotask } from "./routes/put.js";
+import { dotask,undotask,sendresetmail,verifyreset,changepass} from "./routes/put.js";
 import { deltask } from "./routes/delete.js";
 import dotenv from "dotenv"
 dotenv.config()
@@ -58,10 +58,13 @@ app.put("/data/undo",(req,res)=>{undotask(req,res)})
 app.delete("/data/rem",(req,res)=>{deltask(req,res)})
 app.post("/send/mail",(req,res)=>{Sendmail(req,res,app)})
 app.post("/verify/code",(req,res)=>{verifycode(req,res)})
+app.put("/reset/user",(req,res)=>{sendresetmail(req,res,app)})
+app.put("/verify/reset",(req,res)=>{verifyreset(req,res)})
+app.put("/reset/pass",(req,res)=>{changepass(req,res)})
 const start= async ()=>{
         const PORT = process.env.PORT || 3000;
         await app.listen({ port: PORT , host:"0.0.0.0"});
 
-        console.log("serveur à l'ecoute sur le port 3000")
+        console.log("serveur à l'ecoute sur le port ",PORT)
 }
 start()
